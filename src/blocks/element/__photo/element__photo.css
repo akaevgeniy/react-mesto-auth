@@ -1,0 +1,33 @@
+.element__photo {
+  min-width: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: top;
+  background: #c4c4c4;
+  background-size: 100%;
+  border-radius: 10px 10px 0px 0px;
+  cursor: pointer;
+  object-fit: cover;
+  height: 282px;
+  min-height: 282px;
+}
+@media screen and (max-width: 1005px) {
+  .element__photo {
+    max-width: 432.5px;
+    height: 432.5px;
+    min-height: 432.5px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .element__photo {
+    max-width: 100%;
+    height: 325px;
+    min-height: 325px;
+  }
+}
+@media screen and (max-width: 424px) {
+  .element__photo {
+    height: 386px;
+    min-height: 386px;
+  }
+}

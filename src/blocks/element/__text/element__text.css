@@ -1,0 +1,15 @@
+.element__text {
+  display: flex;
+  align-items: center;
+  max-width: 246px;
+  margin: 0 auto 0;
+  margin-top: 22px;
+  padding-bottom: 22px;
+  justify-content: space-between;
+}
+@media screen and (max-width: 1005px) {
+  .element__text {
+    max-width: calc((100% - 36px));
+    width: 100%;
+  }
+}
