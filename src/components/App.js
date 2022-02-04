@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect, withRouter, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
@@ -26,7 +26,12 @@ function App() {
   const [isConfirmPopupOpen, setConfirmPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
+
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+  });
+
   //информация о пользователе
   const [currentUser, setCurrentUser] = React.useState({});
   //данные о карточках
@@ -37,6 +42,42 @@ function App() {
   const parseError = (err) => {
     console.log(err);
   };
+
+  const tokenCheck = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      return;
+    }
+    auth.getContent(jwt).then((user) => {
+      setUserInfo({ email: user.data.email });
+      setLoggedIn(true);
+    });
+  };
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      history.push('/');
+    }
+  }, [loggedIn]);
+
+  const onLogin = (data) => {
+    return auth.authorize(data).then((data) => {
+      setUserInfo({ email: data.email });
+      setLoggedIn(true);
+      localStorage.setItem('jwt', data.token);
+    });
+  };
+
+  const onRegister = (data) => {
+    return auth.register(data).then(() => {
+      history.push('/sign-in');
+    });
+  };
+
   //создаем эффект, изменяющий при монтировании стейты на данные из сервера
   React.useEffect(() => {
     //Загружаем информацию о пользователе и карточках с сервера, объединенно вызываем запросы с Api, обновляем стейты
@@ -139,11 +180,6 @@ function App() {
       .catch((err) => parseError(err));
   };
 
-  const onRegister = (data) => {
-    return auth.register(data).then(() => {
-      history.push('/sign-in');
-    });
-  };
   //отрисовка секций, оборачиваем всё в контекст (данные о пользователе будут доступны со всех компонентов)
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -167,7 +203,7 @@ function App() {
             <Register onRegister={onRegister} />
           </Route>
           <Route path="/sign-in">
-            <Login />
+            <Login onLogin={onLogin} />
           </Route>
         </Switch>
         <Footer />
