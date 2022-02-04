@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -15,6 +15,7 @@ import InfoTooltip from './InfoTooltip';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import okregister from '../images/register-ok.png';
 import api from '../utils/Api';
+import * as auth from '../utils/Auth';
 
 function App() {
   //объявляем стейты попапов и карточки
@@ -31,6 +32,8 @@ function App() {
   //данные о карточках
   const [cards, setCards] = React.useState([]);
   //функция, выводящая в консоль ошибку при запросе к АПИ
+  const history = useHistory();
+
   const parseError = (err) => {
     console.log(err);
   };
@@ -135,6 +138,12 @@ function App() {
       })
       .catch((err) => parseError(err));
   };
+
+  const onRegister = (data) => {
+    return auth.register(data).then(() => {
+      history.push('/sign-in');
+    });
+  };
   //отрисовка секций, оборачиваем всё в контекст (данные о пользователе будут доступны со всех компонентов)
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -155,7 +164,7 @@ function App() {
             component={Main}
           />
           <Route path="/sign-up">
-            <Register />
+            <Register onRegister={onRegister} />
           </Route>
           <Route path="/sign-in">
             <Login />
