@@ -8,9 +8,9 @@ function Header({ loggedIn, userInfo, onLogout }) {
       {loggedIn ? (
         <div className="header__logout">
           <p className="header__text">{userInfo.email}</p>
-          <Link onClick={() => onLogout()} className="header__text header__text_link header__text_opacity">
+          <p onClick={() => onLogout()} className="header__text header__text_link header__text_opacity">
             Выйти
-          </Link>
+          </p>
         </div>
       ) : (
         <Link to={window.location.pathname === '/sign-in' ? 'sign-up' : 'sign-in'} className="header__text header__text_opacity">
