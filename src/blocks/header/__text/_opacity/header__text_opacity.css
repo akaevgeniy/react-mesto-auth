@@ -1,0 +1,6 @@
+.header__text_opacity {
+  transition: opacity 0.7s linear;
+}
+.header__text_opacity:hover {
+  opacity: 0.6;
+}

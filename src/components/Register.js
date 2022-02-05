@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-function Register({ onRegister }) {
+function Register({ onRegister, setTooltipContent, setisInfoTooltipOpen }) {
   const [registerData, setRegisterData] = useState({ email: '', password: '' });
-  const [message, setMessage] = useState('');
 
   function handleChange(e) {
-    setMessage('');
     const { name, value } = e.target;
     setRegisterData({ ...registerData, [name]: value });
   }
@@ -14,10 +12,23 @@ function Register({ onRegister }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { ...data } = registerData;
-    onRegister(data).catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+    onRegister(data)
+      .then(() => {
+        setTooltipContent({
+          text: 'Вы успешно зарегистрировались!',
+          picture: true,
+        });
+        setisInfoTooltipOpen(true);
+      })
+      .catch(() => {
+        setTooltipContent({
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+          picture: false,
+        });
+        setisInfoTooltipOpen(true);
+      });
   };
 
-  console.log(registerData);
   return (
     <form className="popup__form popup__form_login" name={`popup__form_register`} onSubmit={handleSubmit}>
       <h2 className={`popup__title popup__title_login`}>Регистрация</h2>
@@ -46,7 +57,7 @@ function Register({ onRegister }) {
       <input type="submit" className="popup__submit popup__submit_login" value="Зарегистрироваться" />
       <p className="register__subtitle">
         Уже зарегистрированы?{' '}
-        <Link to="sign-in" className="navbar__link">
+        <Link to="sign-in" className="register__subtitle register__subtitle_link">
           Войти
         </Link>
       </p>

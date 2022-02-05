@@ -1,0 +1,6 @@
+.register__subtitle_link {
+  transition: opacity 0.7s linear;
+}
+.register__subtitle_link:hover {
+  opacity: 0.6;
+}

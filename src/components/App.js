@@ -13,7 +13,6 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import InfoTooltip from './InfoTooltip';
 import CurrentUserContext from '../contexts/CurrentUserContext';
-import okregister from '../images/register-ok.png';
 import api from '../utils/Api';
 import * as auth from '../utils/Auth';
 
@@ -30,6 +29,10 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userInfo, setUserInfo] = useState({
     email: '',
+  });
+  const [tooltipContent, setTooltipContent] = useState({
+    text: '',
+    picture: false,
   });
 
   //информация о пользователе
@@ -49,7 +52,7 @@ function App() {
       return;
     }
     auth.getContent(jwt).then((user) => {
-      setUserInfo({ email: user.data.email });
+      setUserInfo({ ...userInfo, email: user.data.email });
       setLoggedIn(true);
     });
   };
@@ -65,10 +68,10 @@ function App() {
   }, [loggedIn]);
 
   const onLogin = (data) => {
-    return auth.authorize(data).then((data) => {
-      setUserInfo({ email: data.email });
+    return auth.authorize(data).then((user) => {
       setLoggedIn(true);
-      localStorage.setItem('jwt', data.token);
+      setUserInfo({ email: data.email });
+      localStorage.setItem('jwt', user.token);
     });
   };
 
@@ -76,6 +79,12 @@ function App() {
     return auth.register(data).then(() => {
       history.push('/sign-in');
     });
+  };
+
+  const onLogout = () => {
+    setLoggedIn(false);
+    localStorage.removeItem('jwt');
+    history.push('/sign-in');
   };
 
   //создаем эффект, изменяющий при монтировании стейты на данные из сервера
@@ -132,6 +141,7 @@ function App() {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setConfirmPopupOpen(false);
+    setisInfoTooltipOpen(false);
     setSelectedCard({});
   };
   //Обработчик, закрывающий попап при нажатии на Escape
@@ -184,7 +194,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header loggedIn={loggedIn} userInfo={userInfo} onLogout={onLogout} />
         <Switch>
           <ProtectedRoute
             exact
@@ -199,12 +209,13 @@ function App() {
             onCardLike={handleCardLike}
             component={Main}
           />
-          <Route path="/sign-up">
-            <Register onRegister={onRegister} />
-          </Route>
           <Route path="/sign-in">
-            <Login onLogin={onLogin} />
+            <Login onLogin={onLogin} setTooltipContent={setTooltipContent} setisInfoTooltipOpen={setisInfoTooltipOpen} />
           </Route>
+          <Route path="/sign-up">
+            <Register onRegister={onRegister} setTooltipContent={setTooltipContent} setisInfoTooltipOpen={setisInfoTooltipOpen} />
+          </Route>
+          <Route>{loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
         </Switch>
         <Footer />
         {/* далее идут компоненты с попапами редактирования профиля, аватра, добавления новой карточки (места), попап подверждения при удалении, попап с изображением  */}
@@ -218,7 +229,7 @@ function App() {
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-        <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} picture={okregister} />
+        <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} tooltipContent={tooltipContent} />
       </div>
     </CurrentUserContext.Provider>
   );

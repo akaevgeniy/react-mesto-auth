@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-function Login({ onLogin }) {
+function Login({ onLogin, setTooltipContent, setisInfoTooltipOpen }) {
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
-
-  const [message, setMessage] = useState('');
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({
@@ -19,12 +16,17 @@ function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage('');
     if (!loginData.email || !loginData.password) {
       return;
     }
 
-    onLogin(loginData).catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+    onLogin(loginData).catch(() => {
+      setTooltipContent({
+        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+        picture: false,
+      });
+      setisInfoTooltipOpen(true);
+    });
   };
 
   return (
