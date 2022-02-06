@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../images/header-logo.svg';
+//шапка сайта, отличается для авторизированного и не авторизированного пользователя
 function Header({ loggedIn, userInfo, onLogout }) {
   return (
     <header className="header">

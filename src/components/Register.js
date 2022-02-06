@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+//компонент для регистрации пользователя
 function Register({ onRegister, setTooltipContent, setisInfoTooltipOpen }) {
   const [registerData, setRegisterData] = useState({ email: '', password: '' });
-
+  //метод для изменения объекта с данными пользователя
   function handleChange(e) {
     const { name, value } = e.target;
     setRegisterData({ ...registerData, [name]: value });
   }
-
+  //метод сабмита, производящий регистрацию пользователя,делаем запрос к серверу и формируем попап через пропс
   const handleSubmit = (e) => {
     e.preventDefault();
     const { ...data } = registerData;

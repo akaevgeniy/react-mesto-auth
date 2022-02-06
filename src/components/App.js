@@ -18,34 +18,35 @@ import * as auth from '../utils/Auth';
 
 function App() {
   //объявляем стейты попапов и карточки
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  const [isInfoTooltipOpen, setisInfoTooltipOpen] = React.useState(false);
-  const [isConfirmPopupOpen, setConfirmPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [deletedCard, setDeletedCard] = React.useState({});
-
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
+  const [isConfirmPopupOpen, setConfirmPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [deletedCard, setDeletedCard] = useState({});
+  //стейт, отвечающий за статус авторизации
+  const [loggedIn, setLoggedIn] = useState(false);
+  //информация о пользователе для вывода в хэдере
   const [userInfo, setUserInfo] = useState({
     email: '',
   });
+  //информация для попапа, выводящего статус регистрации
   const [tooltipContent, setTooltipContent] = useState({
     text: '',
     picture: false,
   });
-
-  //информация о пользователе
-  const [currentUser, setCurrentUser] = React.useState({});
-  //данные о карточках
-  const [cards, setCards] = React.useState([]);
-  //функция, выводящая в консоль ошибку при запросе к АПИ
+  //хук для перехода между страницами
   const history = useHistory();
-
+  //информация о пользователе
+  const [currentUser, setCurrentUser] = useState({});
+  //данные о карточках
+  const [cards, setCards] = useState([]);
+  //функция, выводящая в консоль ошибку при запросе к АПИ
   const parseError = (err) => {
     console.log(err);
   };
-
+  //метод для проверки токена в браузере, если есть токен и сверен с токеном из сервера, пользователь авторизован
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
     if (!jwt) {
@@ -56,17 +57,17 @@ function App() {
       setLoggedIn(true);
     });
   };
-
+  //эффект, срабатывает один раз, проверяя наличие токена после монтирования
   useEffect(() => {
     tokenCheck();
   }, []);
-
+  //эффект для перехода на защищенный роут при авторизации, срабатывает каждый раз после изменения стейта loggedIn
   useEffect(() => {
     if (loggedIn) {
       history.push('/');
     }
   }, [loggedIn]);
-
+  //в методе делаем запрос к серверу для авторизации
   const onLogin = (data) => {
     return auth.authorize(data).then((user) => {
       setLoggedIn(true);
@@ -74,13 +75,13 @@ function App() {
       localStorage.setItem('jwt', user.token);
     });
   };
-
+  //в методе делаем запрос к серверу для регистрации
   const onRegister = (data) => {
     return auth.register(data).then(() => {
       history.push('/sign-in');
     });
   };
-
+  //метод для выхода, удаляем jwt токен
   const onLogout = () => {
     setLoggedIn(false);
     localStorage.removeItem('jwt');
@@ -88,7 +89,7 @@ function App() {
   };
 
   //создаем эффект, изменяющий при монтировании стейты на данные из сервера
-  React.useEffect(() => {
+  useEffect(() => {
     //Загружаем информацию о пользователе и карточках с сервера, объединенно вызываем запросы с Api, обновляем стейты
     Promise.all([api.getUserProfile(), api.getInitialCards()])
       .then(([userData, placeCards]) => {
@@ -145,7 +146,7 @@ function App() {
     setSelectedCard({});
   };
   //Обработчик, закрывающий попап при нажатии на Escape
-  React.useEffect(() => {
+  useEffect(() => {
     const closeByEscape = (e) => {
       if (e.key === 'Escape') {
         closeAllPopups();

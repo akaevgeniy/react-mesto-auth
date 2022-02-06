@@ -6,6 +6,7 @@ function Login({ onLogin, setTooltipContent, setisInfoTooltipOpen }) {
     email: '',
     password: '',
   });
+  //метод для изменения данных пользователя
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({
@@ -13,7 +14,7 @@ function Login({ onLogin, setTooltipContent, setisInfoTooltipOpen }) {
       [name]: value,
     });
   };
-
+  //метод сабмита для произведения авторизации пользователя
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!loginData.email || !loginData.password) {
