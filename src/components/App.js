@@ -38,7 +38,7 @@ function App() {
   });
   //хук для перехода между страницами
   const history = useHistory();
-
+  //стейт для активации меню для мобильной версии, передаем в шапку
   const [menuActive, setMenuActive] = useState(false);
 
   //информация о пользователе
