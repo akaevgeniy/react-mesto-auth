@@ -1,0 +1,10 @@
+@media screen and (max-width: 767px) {
+  .header__button_active::before {
+    top: 50%;
+    transform: translate(0%, 50%) rotate(45deg);
+  }
+  .header__button_active::after {
+    top: 50%;
+    transform: translate(0%, 50%) rotate(-45deg);
+  }
+}

@@ -9,3 +9,8 @@
   color: #ffffff;
   text-decoration: none;
 }
+@media screen and (max-width: 424px) {
+  .register__subtitle {
+    margin-top: 20px;
+  }
+}

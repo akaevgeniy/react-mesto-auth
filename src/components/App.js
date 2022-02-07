@@ -38,6 +38,9 @@ function App() {
   });
   //хук для перехода между страницами
   const history = useHistory();
+
+  const [menuActive, setMenuActive] = useState(false);
+
   //информация о пользователе
   const [currentUser, setCurrentUser] = useState({});
   //данные о карточках
@@ -195,7 +198,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} userInfo={userInfo} onLogout={onLogout} />
+        <Header loggedIn={loggedIn} userInfo={userInfo} onLogout={onLogout} menuActive={menuActive} setMenuActive={setMenuActive} />
         <Switch>
           <ProtectedRoute
             exact

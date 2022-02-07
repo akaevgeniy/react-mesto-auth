@@ -1,0 +1,17 @@
+.header__navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding-top: 45px;
+  padding-bottom: 41px;
+  margin: 0 auto 0;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+@media screen and (max-width: 424px) {
+  .header__navbar {
+    padding-top: 28px;
+    padding-bottom: 31.6px;
+  }
+}

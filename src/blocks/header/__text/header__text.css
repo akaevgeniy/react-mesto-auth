@@ -7,3 +7,9 @@
   color: #ffffff;
   text-decoration: none;
 }
+@media screen and (max-width: 424px) {
+  .header__text {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

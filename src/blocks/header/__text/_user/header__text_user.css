@@ -1,0 +1,7 @@
+@media screen and (max-width: 424px) {
+  .header__text_user {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

@@ -1,0 +1,4 @@
+.header__userblock_hidden {
+  display: none;
+  transform: translateY(-200%);
+}

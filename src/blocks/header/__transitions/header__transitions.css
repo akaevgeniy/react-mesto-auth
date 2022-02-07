@@ -1,0 +1,5 @@
+@media screen and (max-width: 424px) {
+  .header__transitions {
+    padding-right: 30px;
+  }
+}
