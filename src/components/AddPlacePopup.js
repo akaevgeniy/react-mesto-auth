@@ -34,6 +34,8 @@ function AddPlacePopup(props) {
         value={name || ''}
         onChange={handleNameChange}
         required
+        minLength={2}
+        maxLength={30}
       />
       <span id="name-card-error" className="popup__error"></span>
       <input

@@ -1,32 +1,19 @@
 import { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 //компонент для регистрации пользователя
-function Register({ onRegister, setTooltipContent, setisInfoTooltipOpen }) {
+function Register({ onRegister }) {
   const [registerData, setRegisterData] = useState({ email: '', password: '' });
   //метод для изменения объекта с данными пользователя
   function handleChange(e) {
     const { name, value } = e.target;
     setRegisterData({ ...registerData, [name]: value });
   }
-  //метод сабмита, производящий регистрацию пользователя,делаем запрос к серверу и формируем попап через пропс
+  //метод сабмита, производящий регистрацию пользователя
   const handleSubmit = (e) => {
     e.preventDefault();
     const { ...data } = registerData;
-    onRegister(data)
-      .then(() => {
-        setTooltipContent({
-          text: 'Вы успешно зарегистрировались!',
-          picture: true,
-        });
-        setisInfoTooltipOpen(true);
-      })
-      .catch(() => {
-        setTooltipContent({
-          text: 'Что-то пошло не так! Попробуйте ещё раз.',
-          picture: false,
-        });
-        setisInfoTooltipOpen(true);
-      });
+
+    onRegister(data);
   };
 
   return (

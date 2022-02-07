@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
-function Login({ onLogin, setTooltipContent, setisInfoTooltipOpen }) {
+function Login({ onLogin }) {
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -21,13 +21,7 @@ function Login({ onLogin, setTooltipContent, setisInfoTooltipOpen }) {
       return;
     }
 
-    onLogin(loginData).catch(() => {
-      setTooltipContent({
-        text: 'Что-то пошло не так! Попробуйте ещё раз.',
-        picture: false,
-      });
-      setisInfoTooltipOpen(true);
-    });
+    onLogin(loginData);
   };
 
   return (

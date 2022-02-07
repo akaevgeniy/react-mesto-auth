@@ -50,20 +50,31 @@ function App() {
     console.log(err);
   };
   //метод для проверки токена в браузере, если есть токен и сверен с токеном из сервера, пользователь авторизован
-  const tokenCheck = () => {
+  const checkToken = () => {
     const jwt = localStorage.getItem('jwt');
     if (!jwt) {
       return;
     }
-    auth.getContent(jwt).then((user) => {
-      setUserInfo({ ...userInfo, email: user.data.email });
-      setLoggedIn(true);
-    });
+    auth
+      .getContent(jwt)
+      .then((user) => {
+        setUserInfo({ ...userInfo, email: user.data.email });
+        setLoggedIn(true);
+      })
+      .catch((err) => parseError(err));
   };
   //эффект, срабатывает один раз, проверяя наличие токена после монтирования
   useEffect(() => {
-    tokenCheck();
+    checkToken();
   }, []);
+  //функция, формирующая данные для попапа с ошибкой, вызывааем при неудачной регистрации
+  const createErrorTooltip = () => {
+    setTooltipContent({
+      text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      picture: false,
+    });
+    setisInfoTooltipOpen(true);
+  };
   //эффект для перехода на защищенный роут при авторизации, срабатывает каждый раз после изменения стейта loggedIn
   useEffect(() => {
     if (loggedIn) {
@@ -72,17 +83,32 @@ function App() {
   }, [loggedIn]);
   //в методе делаем запрос к серверу для авторизации
   const onLogin = (data) => {
-    return auth.authorize(data).then((user) => {
-      setLoggedIn(true);
-      setUserInfo({ email: data.email });
-      localStorage.setItem('jwt', user.token);
-    });
+    return auth
+      .authorize(data)
+      .then((user) => {
+        setLoggedIn(true);
+        setUserInfo({ email: data.email });
+        localStorage.setItem('jwt', user.token);
+      })
+      .catch(() => {
+        createErrorTooltip();
+      });
   };
-  //в методе делаем запрос к серверу для регистрации
+  //в методе делаем запрос к серверу для регистрации и формируем попап
   const onRegister = (data) => {
-    return auth.register(data).then(() => {
-      history.push('/sign-in');
-    });
+    return auth
+      .register(data)
+      .then(() => {
+        history.push('/sign-in');
+        setTooltipContent({
+          text: 'Вы успешно зарегистрировались!',
+          picture: true,
+        });
+        setisInfoTooltipOpen(true);
+      })
+      .catch(() => {
+        createErrorTooltip();
+      });
   };
   //метод для выхода, удаляем jwt токен
   const onLogout = () => {
@@ -214,10 +240,10 @@ function App() {
             component={Main}
           />
           <Route path="/sign-in">
-            <Login onLogin={onLogin} setTooltipContent={setTooltipContent} setisInfoTooltipOpen={setisInfoTooltipOpen} />
+            <Login onLogin={onLogin} />
           </Route>
           <Route path="/sign-up">
-            <Register onRegister={onRegister} setTooltipContent={setTooltipContent} setisInfoTooltipOpen={setisInfoTooltipOpen} />
+            <Register onRegister={onRegister} />
           </Route>
           <Route>{loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
         </Switch>
